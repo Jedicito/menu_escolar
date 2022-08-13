@@ -9,28 +9,46 @@
 </head>
 <body>
     <div class="container">
+        <form>
         <div class="row">
-            <div class="col">
-                <legend>Login</legend>
-                <label for="login_correo">Correo</label>
-                <input type="email" name="login_correo" id="login_correo" placeholder="Correo">
-                <label for="login_clave"></label>
-                <input type="password" name="login_clave" id="login_clave" placeholder="contraseña">
-                <button id="login_enviar">Ingresar</button>
+            <div class="col-12 col-lg-6 pt-4">
+                <div class="pb-4"><legend>Ingreso</legend></div>
+                <div class="form-floating m-3">
+                    <input type="email" class="form-control" name="login_correo" id="login_correo" placeholder="Correo">
+                    <label for="login_correo">Correo</label>
+                </div>
+                <div class="form-floating m-3">
+                    <input type="password" class="form-control" name="login_clave" id="login_clave" placeholder="contraseña">
+                    <label for="login_clave">Contraseña</label>
+                </div>
+                <div class="pt-4">
+                    <button type="button" class="btn btn-primary" id="login_enviar">Ingresar</button>
+                </div>
             </div>
-            <div class="col">
-                <legend>Registrar</legend>
-                <label for="registro_nombre">Nombre</label>
-                <input type="text" name="registro_nombre" id="registro_nombre" placeholder="Nombre">
-                <label for="registro_correo">Correo</label>
-                <input type="text" name="registro_correo" id="registro_correo" placeholder="Correo">
-                <label for="registro_clave">Contraseña</label>
-                <input type="text" name="registro_clave" id="registro_clave" placeholder="Contraseña">
-                <label for="registro_clave2">Confirme contraseña</label>
-                <input type="text" name="registro_clave2" id="registro_clave2" placeholder="Confirmar contraseña">
-                <button id="registro_enviar">Registrar</button>
+            <div class="col-12 col-lg-6 pt-4">
+                <div class="pb-4"><legend>Registro</legend></div>
+                <div class="form-floating m-3">
+                    <input type="text" class="form-control" name="registro_nombre" id="registro_nombre" placeholder="Nombre">
+                    <label for="registro_nombre">Nombre</label>
+                </div>
+                <div class="form-floating m-3">
+                    <input type="text" class="form-control" name="registro_correo" id="registro_correo" placeholder="Correo">
+                    <label for="registro_correo">Correo</label>
+                </div>
+                <div class="form-floating m-3">
+                    <input type="text" class="form-control" name="registro_clave" id="registro_clave" placeholder="Contraseña">
+                    <label for="registro_clave">Contraseña</label>
+                </div>
+                <div class="form-floating m-3">
+                    <input type="text" class="form-control" name="registro_clave2" id="registro_clave2" placeholder="Confirmar contraseña">
+                    <label for="registro_clave2">Confirme contraseña</label>
+                </div>
+                <div class="pt-4">
+                    <button type="button" class="btn btn-primary" id="registro_enviar">Registrar</button>
+                </div>
             </div>
         </div>
+        </form>
     </div>
     
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>

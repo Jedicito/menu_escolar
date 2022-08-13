@@ -1,21 +1,26 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
-const cp = require('cookie-parser');
+require('dotenv').config(); // Para que funcione el archivo .env, que tiene la clave del pgsql
+const cookieParser = require('cookie-parser'); // Para que lea las cookies. Necesita un app.use()
 const { v4:uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
-app.listen(3000, () => console.log("Servidor levantado en htttp://localhost:3000"));
+app.listen(3000, () => console.log("Servidor levantado en http://localhost:3000"));
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
 
 app.get("/", (req, res) => {
-    const autenticacion = req.cookies['menu_aut']
-    if (condition) {
-        
+    const autenticacion = req.cookies['menu_aut'];
+
+    if (typeof autenticacion !== "undefined") {
+        res.json({
+            autenticacion: 'Exito',
+            valores: [1, 2, 3, 4, 5]
+        })
     } else {
-        
+        res.sendFile(`${__dirname}/views/login.html`);
     }
 
 });
