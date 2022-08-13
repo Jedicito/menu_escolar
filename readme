@@ -1,3 +1,6 @@
 npm i node
 npm i express
 npm i pg
+npm i cookie-parser
+npm i uuid
+npm i jsonwebtoken
