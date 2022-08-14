@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
 
 app.get("/", (req, res) => {
-    const autenticacion = req.cookies['menu_aut'];
+    const autenticacion = req.cookies['menu_escolar_autentifica'];
 
     if (typeof autenticacion !== "undefined") {
         res.json({
@@ -22,9 +22,31 @@ app.get("/", (req, res) => {
     } else {
         res.sendFile(`${__dirname}/views/login.html`);
     }
-
 });
 
 app.get("/login", async (req, res) => {
     res.sendFile(`${__dirname}/views/login.html`);
+});
+
+app.post("/login", async (req, res) => {
+    const valores_cookie = {
+        token: 'abcdef',
+        correo: 'correo@correo.cl',
+        nombre: 'Nombre Correo'
+    };
+
+    const opciones_cookie = {
+        secure: false,
+        httpOnly: true
+    };
+
+    res.cookie("menu_escolar_autentifica", 
+                valores_cookie,
+                opciones_cookie          
+    )
+});
+
+
+app.post("/registrar", async(req, res) => {
+
 });
