@@ -11,49 +11,50 @@
     <div class="container">
         
         <div class="row">
-            <form id="login_form">
-                <div class="col-12 col-lg-6 pt-4">
+            <div class="col-12 col-lg-6 pt-4">
+                <form id="login_form"></form>
                     <div class="pb-4"><legend>Ingreso</legend></div>
                     <div class="form-floating m-3">
-                        <input type="email" class="form-control" name="login_correo" id="login_correo" placeholder="Correo">
+                        <input type="email" class="form-control" name="login_correo" id="login_correo" placeholder="Correo" required>
                         <label for="login_correo">Correo</label>
                     </div>
                     <div class="form-floating m-3">
-                        <input type="password" class="form-control" name="login_clave" id="login_clave" placeholder="contraseña">
+                        <input type="password" class="form-control" name="login_clave" id="login_clave" placeholder="contraseña" required>
                         <label for="login_clave">Contraseña</label>
                     </div>
                     <div class="pt-2">
                         <button type="button" class="btn btn-primary" id="login_enviar">Ingresar</button>
                     </div>
-                </div>
-            </form>
-            <form  id="registro_form">
-                <div class="col-12 col-lg-6 pt-4">
+                </form>
+            </div>
+            <div class="col-12 col-lg-6 pt-4">
+                <form  id="registro_form">
                     <div class="pb-4"><legend>Registro</legend></div>
                     <div class="form-floating m-3">
-                        <input type="text" class="form-control" name="registro_nombre" id="registro_nombre" placeholder="Nombre">
+                        <input type="text" class="form-control" name="registro_nombre" id="registro_nombre" placeholder="Nombre" required>
                         <label for="registro_nombre">Nombre</label>
                     </div>
                     <div class="form-floating m-3">
-                        <input type="text" class="form-control" name="registro_correo" id="registro_correo" placeholder="Correo">
+                        <input type="text" class="form-control" name="registro_correo" id="registro_correo" placeholder="Correo" required>
                         <label for="registro_correo">Correo</label>
                     </div>
                     <div class="form-floating m-3">
-                        <input type="text" class="form-control" name="registro_clave" id="registro_clave" placeholder="Contraseña">
+                        <input type="text" class="form-control" name="registro_clave" id="registro_clave" placeholder="Contraseña" required>
                         <label for="registro_clave">Contraseña</label>
                     </div>
                     <div class="form-floating m-3">
-                        <input type="text" class="form-control" name="registro_clave2" id="registro_clave2" placeholder="Confirmar contraseña">
+                        <input type="text" class="form-control" name="registro_clave2" id="registro_clave2" placeholder="Confirmar contraseña" required>
                         <label for="registro_clave2">Confirme contraseña</label>
                     </div>
                     <div class="pt-2">
                         <button type="button" class="btn btn-primary" id="registro_enviar">Registrar</button>
                     </div>
-                    <div class="pt-2">
+                    <div class="pt-2 text-danger">
                         <p id="registro_validador"></p>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            
         </div>
         </form>
     </div>

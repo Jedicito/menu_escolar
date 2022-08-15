@@ -17,7 +17,28 @@ registro_enviar.addEventListener('click', async(e) => {
     const clave = registro_clave.value;
     const clave2 = registro_clave2.value;
 
-    if(clave === clave2) {
+    let correcto = true
+    if (nombre == "") {
+        correcto = false
+        registro_validador.innerText = "Falta el Nombre"
+    };
+
+    if (correo == "") {
+        correcto = false;
+        registro_validador.innerText = "Falta el Correo"
+    };
+
+    if (clave == "") {
+        correcto = false;
+        registro_validador.innerText = "Falta una Contraseña";
+    }
+
+    if(clave !== clave2) {
+        correcto = false;
+        registro_validador.innerText = "Contraseñas no coinciden";
+    }
+
+    if (correcto) {
         try {
             console.log("nombre: ", nombre);
             const registro = await registrarUsuario(nombre, correo, clave);    
@@ -25,9 +46,6 @@ registro_enviar.addEventListener('click', async(e) => {
             console.log(error);
             registro_validador.innerText = "Ocurrió un error inesperado. Revise la consola";    
         }
-        
-    } else {
-        registro_validador.innerText = "Contraseñas no coinciden";
     }
 
 });
@@ -56,5 +74,4 @@ const  registrarUsuario = (nombre, correo, clave) => {
         return error;
     }
 
-    
 }
