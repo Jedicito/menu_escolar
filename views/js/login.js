@@ -6,14 +6,55 @@ const registro_correo = document.getElementById("registro_correo");
 const registro_clave = document.getElementById("registro_clave");
 const registro_clave2 = document.getElementById("registro_clave2");
 const registro_enviar = document.getElementById("registro_enviar");
+const registro_validador = document.getElementById("registro_validador");
 
 registro_enviar.addEventListener('click', async(e) => {
     e.preventDefault();
+    registro_validador.innerHTML = "";
 
     const nombre = registro_nombre.value;
     const correo = registro_correo.value;
     const clave = registro_clave.value;
+    const clave2 = registro_clave2.value;
 
-    const registro = await registrarUsuario(nombre, correo, clave);
+    if(clave === clave2) {
+        try {
+            console.log("nombre: ", nombre);
+            const registro = await registrarUsuario(nombre, correo, clave);    
+        } catch (error) {
+            console.log(error);
+            registro_validador.innerText = "Ocurrió un error inesperado. Revise la consola";    
+        }
+        
+    } else {
+        registro_validador.innerText = "Contraseñas no coinciden";
+    }
 
-})
+});
+
+const  registrarUsuario = (nombre, correo, clave) => {
+    console.log("registrarUsuario nombre: ", nombre)
+
+    const fd = {
+        nombre: nombre,
+        correo: correo,
+        clave: clave
+    };
+
+    try {
+        const registro = fetch("/registrar", {
+            method: "POST",
+            body: JSON.stringify(fd),
+            headers: {"Content-Type" : "Application/json" }
+        })
+        .then(res => res.json())
+        .catch(error => console.log('Error en registro: ', error))
+        .then(resp => resp);
+    
+        return registro;    
+    } catch (error) {
+        return error;
+    }
+
+    
+}

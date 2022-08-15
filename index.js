@@ -4,12 +4,14 @@ require('dotenv').config(); // Para que funcione el archivo .env, que tiene la c
 const cookieParser = require('cookie-parser'); // Para que lea las cookies. Necesita un app.use()
 const { v4:uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
+const { registrarUsuario } = require('./consultas.js');
 
 app.listen(3000, () => console.log("Servidor levantado en http://localhost:3000"));
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
+app.use("/js", express.static(`${__dirname}/views/js`));
 
 app.get("/", (req, res) => {
     const autenticacion = req.cookies['menu_escolar_autentifica'];
@@ -48,5 +50,17 @@ app.post("/login", async (req, res) => {
 
 
 app.post("/registrar", async(req, res) => {
+    console.log("/registrar req.body: ", req.body);
+    const { nombre, correo, clave } = req.body;
+    
+    try {
+        const resp = await registrarUsuario(nombre, correo, clave);    
+    } catch (error) {
+        console.log("Error en /registrar: ", error);
+        res.status(500).send(error);
+    }
+    
 
+
+    
 });
