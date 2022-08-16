@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser'); // Para que lea las cookies. Nece
 const { v4:uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { registrarUsuario } = require('./consultas.js');
+const { registrarUsuario, verificarUsuario } = require('./consultas.js');
 
 app.listen(3000, () => console.log("Servidor levantado en http://localhost:3000"));
 
@@ -18,10 +18,7 @@ app.get("/", (req, res) => {
     const autenticacion = req.cookies['menu_escolar_autentifica'];
 
     if (typeof autenticacion !== "undefined") {
-        res.json({
-            autenticacion: 'Exito',
-            valores: [1, 2, 3, 4, 5]
-        })
+        res.send("autenticado");
     } else {
         res.sendFile(`${__dirname}/views/login.html`);
     }
@@ -33,21 +30,52 @@ app.get("/login", async (req, res) => {
 
 app.post("/logear", async (req, res) => {
     const { correo, clave } = req.body;
-    const valores_cookie = {
-        token: 'abcdef',
-        correo: 'correo@correo.cl',
-        nombre: 'Nombre Correo'
-    };
+    console.log("/logear req.body: ", req.body);
+    
 
-    const opciones_cookie = {
-        secure: false,
-        httpOnly: true
-    };
+    let usuario_verificado = false;
+    let nombre;
 
-    res.cookie("menu_escolar_autentifica", 
-                valores_cookie,
-                opciones_cookie          
-    )
+    try {
+        const usuario = await verificarUsuario(correo);
+        //console.log(usuario);
+        nombre = usuario.rows[0].nombre;
+        if (usuario.rows.length > 0) {
+            const clave_verificada = bcrypt.compareSync(clave, usuario.rows[0].clave)
+            if (clave_verificada) {
+                usuario_verificado = true
+            } else {
+                res.status(401).json("Contraseña incorrecta");
+            }
+        } else {
+            res.status(418).json({'error': 'Correo no existe'});
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+
+    if (usuario_verificado) {
+       
+        const token = jwt.sign({nombre, correo}, process.env.JWT_LLAVE);
+
+        const valores_cookie = {
+            token,
+        };
+
+        const opciones_cookie = {
+            secure: false,
+            httpOnly: true
+        };
+
+        res.cookie("menu_escolar_autentifica", 
+                    valores_cookie,
+                    opciones_cookie          
+        )
+
+        res.json({codigo: 'Exito'});
+    }
+
+
 });
 
 

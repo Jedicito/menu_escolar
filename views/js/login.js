@@ -90,21 +90,26 @@ login_enviar.addEventListener('click', async (e) => {
         correcto = false;
     };
 
+    let login;
     if (correcto) {
         try {
-            const login = await logearUsuario(correo, clave);
+            login = await logearUsuario(correo, clave);
         } catch (error) {
             console.log(error);
         };
     } else {
         console.log("Faltó usuario o contraseña");
     };
+
+    if (login.codigo == 'Exito') {
+        window.location.href = "/";
+    }
 });
 
 const logearUsuario = (correo, clave) => {
     const fd = {
-        correo: correo,
-        clave: clave
+        correo,
+        clave
     };
 
     try {

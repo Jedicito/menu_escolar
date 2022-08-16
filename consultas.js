@@ -8,11 +8,11 @@ const pool = new Pool ({
     password: process.env.PG_PASS
 });
 
-const logearUsuario = (correo, clave) => {
+const verificarUsuario = (correo) => {
     try {
         const config = {
-            text: "Select * from escuelas where correo = $1 and clave = $2;",
-            values: [correo, clave]
+            text: "Select * from escuelas where correo = $1 limit 1;",
+            values: [ correo ]
         }
         const resp = pool.query(config);
         return resp;
@@ -38,4 +38,4 @@ const registrarUsuario = (nombre, correo, clave) => {
     };
 };
 
-module.exports = { registrarUsuario }
+module.exports = { registrarUsuario, verificarUsuario }
