@@ -2,9 +2,8 @@ const express = require('express');
 const app = express();
 require('dotenv').config(); // Para que funcione el archivo .env, que tiene la clave del pgsql
 const cookieParser = require('cookie-parser'); // Para que lea las cookies. Necesita un app.use()
-const { v4:uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); /// Única y exclusivamente para encriptar la password
 const { registrarUsuario, verificarUsuario } = require('./consultas.js');
 
 app.listen(3000, () => console.log("Servidor levantado en http://localhost:3000"));
@@ -15,12 +14,29 @@ app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`)
 app.use("/js", express.static(`${__dirname}/views/js`));
 
 app.get("/", (req, res) => {
-    const autenticacion = req.cookies['menu_escolar_autentifica'];
+    const token = req.cookies['menu_escolar_autentifica'];
+    //console.log("token: ", token);
+    let autenticado = false;
+    let datos;
+    if (typeof token != "undefined") {
+        jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
+            if (error) {
+                console.log("jwt no autenticado");
+                res.clearCookie('menu_escolar_autentifica');
+            } else {
+                //console.log("verify: ", data);
+                autenticado = true
+                datos = data;
+                console.log("nombre: ", datos.nombre);
+            }
+        })
+    }
 
-    if (typeof autenticacion !== "undefined") {
-        res.send("autenticado");
-    } else {
+    //console.log("Autenticado: ", autenticado);
+    if (!autenticado) {
         res.sendFile(`${__dirname}/views/login.html`);
+    } else {
+        res.sendFile(`${__dirname}/views/listado.html`);
     }
 });
 
@@ -30,9 +46,8 @@ app.get("/login", async (req, res) => {
 
 app.post("/logear", async (req, res) => {
     const { correo, clave } = req.body;
-    console.log("/logear req.body: ", req.body);
+    //console.log("/logear req.body: ", req.body);
     
-
     let usuario_verificado = false;
     let nombre;
 
@@ -68,19 +83,18 @@ app.post("/logear", async (req, res) => {
         };
 
         res.cookie("menu_escolar_autentifica", 
-                    valores_cookie,
+                    token,
                     opciones_cookie          
         )
 
         res.json({codigo: 'Exito'});
     }
 
-
 });
 
 
 app.post("/registrar", async(req, res) => {
-    console.log("/registrar req.body: ", req.body);
+    //console.log("/registrar req.body: ", req.body);
     const { nombre, correo, clave } = req.body;
     const claveHash = bcrypt.hashSync(clave, 8);
     
@@ -90,6 +104,5 @@ app.post("/registrar", async(req, res) => {
         console.log("Error en /registrar: ", error);
         res.status(500).send(error);
     }
-
     
 });
