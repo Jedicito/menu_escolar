@@ -8,7 +8,23 @@ const pool = new Pool ({
     password: process.env.PG_PASS
 });
 
+const logearUsuario = (correo, clave) => {
+    try {
+        const config = {
+            text: "Select * from escuelas where correo = $1 and clave = $2;",
+            values: [correo, clave]
+        }
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Error en logearUsuario: ", error);
+        return error;
+    }
+}
+
 const registrarUsuario = (nombre, correo, clave) => {
+    /// Hashear la clave
+
     try {
         const config = {
             text: "Insert into escuelas (nombre, correo, clave) values ($1, $2, $3) returning *;",

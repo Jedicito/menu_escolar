@@ -75,3 +75,51 @@ const  registrarUsuario = (nombre, correo, clave) => {
     }
 
 }
+
+login_enviar.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const correo = login_correo.value;
+    const clave = login_clave.value;
+
+    let correcto = true;
+    if (correo == "") {
+        correcto = false;
+    };
+    if (clave == "") {
+        correcto = false;
+    };
+
+    if (correcto) {
+        try {
+            const login = await logearUsuario(correo, clave);
+        } catch (error) {
+            console.log(error);
+        };
+    } else {
+        console.log("Faltó usuario o contraseña");
+    };
+});
+
+const logearUsuario = (correo, clave) => {
+    const fd = {
+        correo: correo,
+        clave: clave
+    };
+
+    try {
+        const logeo = fetch("/logear", {
+            method: "POST",
+            body: JSON.stringify(fd),
+            headers: {"Content-Type": "Application/json"}
+        })
+        .then(res => res.json())
+        .catch(error => console.log('Error en logeo: ', error))
+        .then(resp => resp);
+    
+        return logeo;    
+    } catch (error) {
+        return error;
+    };
+    
+}
