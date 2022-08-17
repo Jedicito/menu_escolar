@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <title>Nuevo Pedido</title>
+</head>
+<body>
+    <div class="container">
+        <div class="pb-4"><legend> Nuevo Pedido </legend></div>
+        <div>
+            <form id="form">
+                <div class="row">
+                    <div class="form-floating m-3 col-lg-4">
+                        <input type="number" name="vegeta" id="vegeta" class="form-control" placeholder="Vegetarianos" value="0" required>
+                        <label for="vegeta">Vegetarianos</label>
+                    </div>
+                    <div class="form-floating m-3 col-lg-4" >
+                        <input type="number" name="celiaco" id="celiaco" class="form-control" placeholder="Celiacos" value="0" required>
+                        <label for="celiaco">Celiacos</label>
+                    </div>
+                    <div class="form-floating m-3 col-lg-4">
+                        <input type="number" name="estandar" id="estandar" class="form-control" placeholder="Estandar" value="0" required>
+                        <label for="estandar">Est&aacute;ndar</label>
+                    </div>
+                    <div class="form-floating m-3 col-lg-4">
+                        <input type="number" name="calorico" id="calorico" class="form-control" placeholder="Calorico" value="0" required>
+                        <label for="calorico">Cal&oacute;rico</label>
+                    </div>
+                    <div class="form-floating m-3 col-lg-4">
+                        <input type="number" name="autoctono" id="autoctono" class="form-control" placeholder="Autoctono" value="0" required>
+                        <label for="autoctono">Aut&oacute;ctono</label>
+                    </div>
+                    <div class="form-floating m-3 col-lg-4">
+                        <input type="date" name="fecha" id="fecha" class="form-control" placeholder="dd/mm/yyyy" value="0" required>
+                        <label for="fecha">Fecha</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <a href="/" class="btn btn-primary mt-3">Volver</a>
+            </div>
+            <div class="col-lg-6">
+                <button class="btn btn-primary mt-3">Agregar</button>
+            </div>
+        </div>
+    </div>
+    <script src="./js/nuevo_pedido.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
