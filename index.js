@@ -13,24 +13,11 @@ app.use(cookieParser());
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
 app.use("/js", express.static(`${__dirname}/views/js`));
 
-app.get("/", (req, res) => {
-    const token = req.cookies['menu_escolar_autentifica'];
-    //console.log("token: ", token);
-    let autenticado = false;
-    let datos;
-    if (typeof token != "undefined") {
-        jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
-            if (error) {
-                console.log("jwt no autenticado");
-                res.clearCookie('menu_escolar_autentifica');
-            } else {
-                //console.log("verify: ", data);
-                autenticado = true
-                datos = data;
-                //console.log("nombre: ", datos.nombre);
-            }
-        })
-    }
+app.get("/", async (req, res) => {
+    
+    const autenticacion = await autenticacion_cookie(req);
+    //console.log(autenticacion);
+    autenticado = autenticacion.autenticado;
 
     //console.log("Autenticado: ", autenticado);
     if (!autenticado) {
@@ -112,18 +99,31 @@ app.get("/listarpedidos", async (req, res) => {
     
     const autenticacion = await autenticacion_cookie(req);
     console.log(autenticacion);
-    autenticado = autenticacion.autenticado;
-
+    const autenticado = autenticacion.autenticado;
+    
     //console.log("Autenticado: ", autenticado);
-    if (!autenticado) {
+    if (autenticado) {
+        console.log("/listarpedidos Autenticado");
+        //// Debo buscar los pedidos del correo
+        const id = autenticacion.id;
+
+        let pedidos;
+        try {
+            pedidos = await buscarPedidosxUsuario(id);
+        } catch (error) {
+            console.log("Error en /listarpedidos: ", error);
+        }
+        console.log(pedidos.rows);
+        res.json(pedidos.rows);
+    } else {
         console.log("/listarpedidos No Autenticado");
         //res.sendFile(`${__dirname}/views/login.html`);
         res.send("no autenticado");
-    } else {
-        console.log("/listarpedidos Autenticado");
-        //res.sendFile(`${__dirname}/views/listado.html`);
-        res.json(autenticacion);
     };
+});
+
+app.get("/nuevo_pedido", (req, res) => {
+    res.sendFile(`${__dirname}/views/nuevo_pedido.html`);
 });
 
 const autenticacion_cookie = (req) => {
@@ -143,13 +143,22 @@ const autenticacion_cookie = (req) => {
                 //console.log("nombre: ", datos.nombre);
             };
         });
-    };
+        retorno_json = {
+            autenticado,
+            id: datos.id,
+            nombre: datos.nombre,
+            correo: datos.correo
+        };
+    } else { /// Cuando no hay token, significa que no hay cookie, porque no está autenticado
+        retorno_json = {
+            autenticado: false,
+            id: "",
+            nombre: "",
+            correo: ""
+        };
+    }
 
-    retorno_json = {
-        autenticado,
-        nombre: datos.nombre,
-        correo: datos.correo
-    };
+    
 
     return retorno_json;
 }

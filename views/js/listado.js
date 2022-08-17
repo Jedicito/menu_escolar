@@ -1,4 +1,5 @@
 const tabla_pedidos = document.getElementById("tabla_pedidos");
+const nuevo_pedido = document.getElementById("nuevo_pedido");
 
 const listarPedidos = () => {
     const lista_pedidos = fetch("/listarpedidos")
@@ -12,5 +13,6 @@ const listarPedidos = () => {
 (async ()=>{
     const lista_pedidos = await listarPedidos();
     console.log("Lista Pedidos: ", lista_pedidos)
-    //lista_pedidos.map(pedido => tabla_pedidos.innerHTML += `<tr><td>${pedido.id}</td><td>${pedido.fecha_pedido}</td><td>${pedido.vegetarianos}</td></tr>`)
+    lista_pedidos.map(pedido => tabla_pedidos.innerHTML += `<tr><td>${pedido.id}</td><td>${pedido.fecha_pedido}</td><td>${pedido.vegetarianos}</td></tr>`)
 })();
+
