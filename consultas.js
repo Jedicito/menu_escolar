@@ -38,4 +38,21 @@ const registrarUsuario = (nombre, correo, clave) => {
     };
 };
 
-module.exports = { registrarUsuario, verificarUsuario }
+const buscarPedidosxUsuario = (id) => {
+
+    try {
+        const config = {
+            text: "Select * from pedidos where id_escuela = $1;",
+            values: [id]
+        };
+
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Error buscarPedidosxUsuario: ", error);
+        return error;
+    }
+
+};
+
+module.exports = { registrarUsuario, verificarUsuario, buscarPedidosxUsuario }

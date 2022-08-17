@@ -4,7 +4,7 @@ require('dotenv').config(); // Para que funcione el archivo .env, que tiene la c
 const cookieParser = require('cookie-parser'); // Para que lea las cookies. Necesita un app.use()
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); /// Única y exclusivamente para encriptar la password
-const { registrarUsuario, verificarUsuario } = require('./consultas.js');
+const { registrarUsuario, verificarUsuario,  buscarPedidosxUsuario } = require('./consultas.js');
 
 app.listen(3000, () => console.log("Servidor levantado en http://localhost:3000"));
 
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
                 //console.log("verify: ", data);
                 autenticado = true
                 datos = data;
-                console.log("nombre: ", datos.nombre);
+                //console.log("nombre: ", datos.nombre);
             }
         })
     }
@@ -54,6 +54,7 @@ app.post("/logear", async (req, res) => {
     try {
         const usuario = await verificarUsuario(correo);
         //console.log(usuario);
+        id = usuario.rows[0].id;
         nombre = usuario.rows[0].nombre;
         if (usuario.rows.length > 0) {
             const clave_verificada = bcrypt.compareSync(clave, usuario.rows[0].clave)
@@ -71,7 +72,7 @@ app.post("/logear", async (req, res) => {
 
     if (usuario_verificado) {
        
-        const token = jwt.sign({nombre, correo}, process.env.JWT_LLAVE);
+        const token = jwt.sign({id, nombre, correo}, process.env.JWT_LLAVE);
 
         const valores_cookie = {
             token,
@@ -106,3 +107,49 @@ app.post("/registrar", async(req, res) => {
     }
     
 });
+
+app.get("/listarpedidos", async (req, res) => {
+    
+    const autenticacion = await autenticacion_cookie(req);
+    console.log(autenticacion);
+    autenticado = autenticacion.autenticado;
+
+    //console.log("Autenticado: ", autenticado);
+    if (!autenticado) {
+        console.log("/listarpedidos No Autenticado");
+        //res.sendFile(`${__dirname}/views/login.html`);
+        res.send("no autenticado");
+    } else {
+        console.log("/listarpedidos Autenticado");
+        //res.sendFile(`${__dirname}/views/listado.html`);
+        res.json(autenticacion);
+    };
+});
+
+const autenticacion_cookie = (req) => {
+    const token = req.cookies['menu_escolar_autentifica'];
+    //console.log("token: ", token);
+    let autenticado = false;
+    let datos;
+    if (typeof token != "undefined") {
+        jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
+            if (error) {
+                console.log("jwt no autenticado");
+                res.clearCookie('menu_escolar_autentifica');
+            } else {
+                //console.log("verify: ", data);
+                autenticado = true
+                datos = data;
+                //console.log("nombre: ", datos.nombre);
+            };
+        });
+    };
+
+    retorno_json = {
+        autenticado,
+        nombre: datos.nombre,
+        correo: datos.correo
+    };
+
+    return retorno_json;
+}
